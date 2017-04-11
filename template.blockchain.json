@@ -1,0 +1,101 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "minerAddress": {
+            "type": "string",
+            "metadata": {
+                "description": "A hexidecimal account address value. One may be generated using myetherwallet.com"
+            }
+        },
+        "consortiumName": {
+            "type": "string",
+            "metadata": {
+                "description": "A short identifier to distinguish machines in this membership"
+            },
+            "defaultValue": "BDEMO"
+        },
+        "sshPublicKey": {
+            "type": "string",
+            "metadata": {
+                "description": "ssh public key(s) for connecting to VMs."
+            },
+            "defaultValue": "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAmjn4yfdwv5qrZkJ8qrMurQcIlAi9RItcDgaIlAquDgGzAZ/ZrJBTizvU6THIWVxNxWasmUF4qCyy3zmvjab8KnGMHN+RFe/FT/ySNFwfQ2KK934inqCuEMpO2o58l0HdUVi2HvdL2yug6OByyN5HKtFNLngiU8zD0GV0PQXfD/0lbN6IDXQDQ5MhONNq0tKTAuhX2rpvGmayRowPw3zKFsalrt1P/Um23DMmmkF4L/QCCIbk5kJ/MlcoXn5a2FsE9UKSW/jv6I9KooD600fptca07e3bIeqdf824AtN0AsYBOUijFjiMuQ00DsQrRlZXWhy3+vTEAhBF3Q+7ZdCr9Q== demo-booking-reconcilation"
+        },
+        "gethNetworkId": {
+            "type": "securestring",
+            "metadata": {
+                "description": "A unique id used to ensure only machines on the same network can talk to each other"
+            },
+            "defaultValue": "54321"
+        },
+        "dashboardSecret": {
+            "type": "securestring",
+            "metadata": {
+                "description": "A unique string to used to ensure only machines with the secret can post to the dashboard"
+            },
+            "defaultValue": "54321"
+        }
+    },
+    "variables": {
+        "contentRoot": "https://raw.githubusercontent.com/EthereumEx/ethereum-arm-templates/master/ethereum-consortium",
+        "members": [
+            {
+                "name": "PRIMARY",
+                "minerCount": 2,
+                "txNodeCount": 3,
+                "minerAddress": "[parameters('minerAddress')]",
+                "location": "[resourceGroup().location]"
+            }
+        ],
+        "genesisBlock": {
+            "coinbase": "0x0",
+            "difficulty": "0x20000",
+            "extraData": "0x0",
+            "gasLimit": "0x493E00",
+            "mixhash": "0x0",
+            "nonce": "0x0000",
+            "parentHash": "0x0",
+            "timestamp": "0x00",
+            "alloc": {
+                "[parameters('minerAddress')]" : {
+                    "balance": "1000000000000000000000000"
+                }
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "name": "Demo-Blockchain",
+            "apiVersion": "2015-01-01",
+            "properties": {
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[concat(variables('contentRoot'), '/template.consortium.json')]"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                    "consortiumName": {
+                        "value": "[parameters('consortiumName')]"
+                    },
+                    "members": {
+                        "value": "[variables('members')]"
+                    },
+                    "sshPublicKey": {
+                        "value": "[parameters('sshPublicKey')]"
+                    },
+                    "genesisJson": {
+                        "value": "[variables('genesisBlock')]"
+                    },
+                    "gethNetworkId": {
+                        "value": "[parameters('gethNetworkId')]"
+                    },
+                    "dashboardSecret": {
+                        "value": "[parameters('dashboardSecret')]"
+                    }
+                }
+            }
+        }
+    ]
+}
