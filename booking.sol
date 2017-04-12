@@ -22,7 +22,7 @@ contract Booking
         address me = tx.origin;
         bool party1 = me < externalParty;
 
-        if (uint price == 0)
+        if (price == 0)
         {
             throw;
         }
