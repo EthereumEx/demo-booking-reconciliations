@@ -31,6 +31,11 @@ contract Booking
 
     function internalUpdateBooking(string reference, address me, address externalParty, uint price) private 
     {
+        if (referenceId != reference)
+        {
+            throw;
+        }
+
         bool party1 = me < externalParty;
         BookingData currentParty;
         
