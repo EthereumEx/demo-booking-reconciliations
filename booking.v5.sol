@@ -21,7 +21,20 @@ contract Booking
         }
 
         referenceId = reference;
-        internalUpdateBooking(reference, msg.sender, externalParty, price);
+        BookingData activeParty = party1;
+
+        if (msg.sender > externalParty)
+        {
+            activeParty = party2;
+            party1.principal = exernalParty;
+        }
+        else
+        {
+            party2.principal = externalParty;
+        }
+
+        activeParty.principal = msg.sender;
+        activeParty.price = price;
     }
 
     function updateBooking(string reference, address externalParty, uint price) 
@@ -36,25 +49,25 @@ contract Booking
             throw;
         }
 
-        bool party1 = me < externalParty;
-        BookingData currentParty;
+        BookingData currentParty = party1;
         
-        if (party1)
-        {
-            currentParty = party1;
-        }
-        else
+        if (me > externalParty)
         {
             currentParty = party2;
         }
 
-        if (currentParty.principal = 0x0)
+        verifyPartyUpdatePrice(me, currentParty, price);
+        updateState();
+    }
+
+    function verifyPartyUpdatePrice(address me, BookingData data, uint price) private
+    {
+        if (data.principal != me)
         {
-            currentParty.party1 = me;
+            throw;
         }
 
-        currentParty.price = price;
-        updateState();
+        data.price = price;
     }
 
     function updateState() private
