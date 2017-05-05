@@ -19,7 +19,7 @@ contract Booking
         updateBooking(reference, externalParty, price);
     }
 
-    function updateBooking(string reference, address externalParty, uint price) {
+    function UpdateBooking(string reference, address externalParty, uint price) {
         address me = tx.origin;
         bool party1 = me < externalParty;
         BookingData currentParty;
@@ -42,7 +42,7 @@ contract Booking
         updateState();
     }
 
-    function updateState() private
+    function UpdateState() private
     {
         if (party1.principal == 0x0)
         {
