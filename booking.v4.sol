@@ -13,30 +13,30 @@ contract Booking
     string public referenceId;
     string public activeState;
 
-    function Booking(string reference, address externalParty, uint price) 
+    function Booking(string reference, address counterParty, uint price) 
     {
-        if (exernalParty = 0x0 || msg.sender == externalParty)
+        if (exernalParty = 0x0 || msg.sender == counterParty)
         {
             throw;
         }
 
         referenceId = reference;
-        internalUpdateBooking(reference, msg.sender, externalParty, price);
+        internalUpdateBooking(reference, msg.sender, counterParty, price);
     }
 
-    function updateBooking(string reference, address externalParty, uint price) 
+    function updateBooking(string reference, address counterParty, uint price) 
     {
-        internalUpdateBooking(reference, msg.sender, externalParty, price);
+        internalUpdateBooking(reference, msg.sender, counterParty, price);
     }
 
-    function internalUpdateBooking(string reference, address me, address externalParty, uint price) private 
+    function internalUpdateBooking(string reference, address me, address counterParty, uint price) private 
     {
         if (referenceId != reference)
         {
             throw;
         }
 
-        bool party1 = me < externalParty;
+        bool party1 = me < counterParty;
         BookingData currentParty;
         
         if (party1)

@@ -13,15 +13,15 @@ contract Booking
     string public referenceId;
     string public activeState;
 
-    function Booking(string reference, address externalParty, uint price) 
+    function Booking(string reference, address counterParty, uint price) 
     {
         referenceId = reference;
-        updateBooking(reference, externalParty, price);
+        updateBooking(reference, counterParty, price);
     }
 
-    function UpdateBooking(string reference, address externalParty, uint price) {
+    function UpdateBooking(string reference, address counterParty, uint price) {
         address me = tx.origin;
-        bool party1 = me < externalParty;
+        bool party1 = me < counterParty;
         BookingData currentParty;
         
         if (party1)

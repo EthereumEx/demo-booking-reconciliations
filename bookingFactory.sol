@@ -9,20 +9,20 @@ contract Booking
     string public referenceId;
     string public activeState;
 
-    function Booking(string reference, address externalParty, uint price) 
+    function Booking(string reference, address counterParty, uint price) 
     {
-        if (tx.origin == externalParty)
+        if (tx.origin == counterParty)
         {
             throw;
         }
         referenceId = reference;
-        updateBooking(reference, externalParty, price);
+        updateBooking(reference, counterParty, price);
     }
 
-    function updateBooking(string reference, address externalParty, uint price) 
+    function updateBooking(string reference, address counterParty, uint price) 
     {
         address me = tx.origin;
-        bool party1 = me < externalParty;
+        bool party1 = me < counterParty;
 
         if (price == 0)
         {
@@ -36,11 +36,11 @@ contract Booking
         
         if (party1)
         {
-            updateParty1(me, externalParty, price);
+            updateParty1(me, counterParty, price);
         }
         else
         {
-            updateParty2(me, externalParty, price);
+            updateParty2(me, counterParty, price);
         }
 
         updateState();
@@ -66,13 +66,13 @@ contract Booking
         }
     }
 
-    function updateParty1(address me, address externalParty, uint price) private
+    function updateParty1(address me, address counterParty, uint price) private
     {
         if (party2 == 0x0)
         {
-            party2 = externalParty;
+            party2 = counterParty;
         }
-        else if (party2 != externalParty)
+        else if (party2 != counterParty)
         {
             throw;
         }
@@ -89,13 +89,13 @@ contract Booking
         party1Price = price;
     }
 
-    function updateParty2(address me, address externalParty, uint price) private
+    function updateParty2(address me, address counterParty, uint price) private
     {
         if (party1 == 0x0)
         {
-            party1 = externalParty;
+            party1 = counterParty;
         }
-        else if (party1 != externalParty)
+        else if (party1 != counterParty)
         {
             throw;
         }

@@ -13,18 +13,18 @@ contract Booking
     string public referenceId;
     string public activeState;
 
-    function Booking(string reference, address externalParty, uint price) 
+    function Booking(string reference, address counterParty, uint price) 
     {
         referenceId = reference;
-        internalUpdateBooking(reference, msg.sender, externalParty, price);
+        internalUpdateBooking(reference, msg.sender, counterParty, price);
     }
 
-    function updateBooking(string reference, address externalParty, uint price) 
+    function UpdateBooking(string reference, address counterParty, uint price) 
     {
-        internalUpdateBooking(reference, msg.sender, externalParty, price);
+        internalUpdateBooking(reference, msg.sender, counterParty, price);
     }
 
-    function internalUpdateBooking(string reference, address me, address externalParty, uint price) private 
+    function InternalUpdateBooking(string reference, address me, address counterParty, uint price) private 
     {
     }
 }
